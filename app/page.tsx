@@ -4,23 +4,28 @@ import Image from "next/image";
 import arrow from "../ui/asset/image/arrow.svg";
 import MainImageCard from "../ui/main-image-card";
 import { useEffect, useRef } from "react";
-import UseScrollDirection from "../hooks/use-scroll-direction";
+import { UseScrollDirection } from "../hooks/use-scroll-direction";
 
 export default function Main() {
-  const { currentY } = UseScrollDirection({
-    onScrollDown: () => {
-      currentY.current?.scrollTo({
-        top: currentY.current.scrollTop + currentY.current.clientHeight,
-        behavior: "smooth",
-      });
-    },
-    onScrollUp: () => {
-      currentY.current?.scrollTo({
-        top: currentY.current.scrollTop - currentY.current.clientHeight,
-        behavior: "smooth",
-      });
-    },
-  });
+  const { containerRef } = UseScrollDirection();
+  //   onScrollDown: () => {
+  //     if (
+  //       currentY.current &&
+  //       currentY.current?.scrollTop ===
+  //         currentY.current?.scrollTop + currentY.current?.clientHeight
+  //     )
+  //       currentY.current?.scrollTo({
+  //         top: currentY.current.scrollTop + currentY.current.clientHeight,
+  //         behavior: "smooth",
+  //       });
+  //   },
+  //   onScrollUp: () => {
+  //     currentY.current?.scrollTo({
+  //       top: currentY.current.scrollTop - currentY.current.clientHeight,
+  //       behavior: "smooth",
+  //     });
+  //   },
+  // });
 
   return (
     <div className="w-screen h-screen flex justify-center items-center overflow-hidden">
@@ -31,7 +36,7 @@ export default function Main() {
         </div>
 
         <div
-          ref={currentY}
+          ref={containerRef}
           className="h-full bg-white flex flex-col justify-center overflow-y-scroll"
         >
           <div className="grid grid-cols-4 w-full auto-rows-[calc(92vh/3)] h-screen gap-4">
