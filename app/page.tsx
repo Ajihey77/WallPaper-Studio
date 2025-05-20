@@ -40,7 +40,7 @@ export default function Main() {
           className="h-full bg-white flex flex-col justify-center overflow-y-scroll"
         >
           <div className="grid grid-cols-4 w-full auto-rows-[calc(92vh/3)] h-screen gap-4">
-            {Array.from({ length: 48 }).map((_, i) => (
+            {Array.from({ length: 60 }).map((_, i) => (
               <MainImageCard key={i} />
             ))}
           </div>

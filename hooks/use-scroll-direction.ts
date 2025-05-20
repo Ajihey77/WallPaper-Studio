@@ -10,7 +10,7 @@ export function UseScrollDirection() {
     const el = containerRef.current;
 
     const currentScroll = el.scrollTop;
-    const clientHeight = el.clientHeight + 32;
+    const clientHeight = el.clientHeight;
 
     const pageCount = Math.ceil(el.scrollHeight / clientHeight);
     const currentPage = Math.floor(currentScroll / clientHeight);
@@ -25,17 +25,15 @@ export function UseScrollDirection() {
       return;
     }
 
-    const targetScroll = targetPage * clientHeight;
-
-    if (targetScroll === currentScroll) return; // 이미 해당 위치면 무시
+    const targetScroll = targetPage * (clientHeight + 20);
 
     isAnimating.current = true;
-
+    console.log(targetScroll);
     el.scrollTo({ top: targetScroll, behavior: "smooth" });
 
     const checkIfScrollEnded = () => {
       const diff = Math.abs(el.scrollTop - targetScroll);
-      if (diff < 2) {
+      if (diff < 1) {
         isAnimating.current = false;
         el.removeEventListener("scroll", checkIfScrollEnded);
       }
