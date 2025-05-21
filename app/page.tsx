@@ -3,29 +3,10 @@
 import Image from "next/image";
 import arrow from "../ui/asset/image/arrow.svg";
 import MainImageCard from "../ui/main-image-card";
-import { useEffect, useRef } from "react";
 import { UseScrollDirection } from "../hooks/use-scroll-direction";
 
 export default function Main() {
   const { containerRef } = UseScrollDirection();
-  //   onScrollDown: () => {
-  //     if (
-  //       currentY.current &&
-  //       currentY.current?.scrollTop ===
-  //         currentY.current?.scrollTop + currentY.current?.clientHeight
-  //     )
-  //       currentY.current?.scrollTo({
-  //         top: currentY.current.scrollTop + currentY.current.clientHeight,
-  //         behavior: "smooth",
-  //       });
-  //   },
-  //   onScrollUp: () => {
-  //     currentY.current?.scrollTo({
-  //       top: currentY.current.scrollTop - currentY.current.clientHeight,
-  //       behavior: "smooth",
-  //     });
-  //   },
-  // });
 
   return (
     <div className="w-screen h-screen flex justify-center items-center overflow-hidden">
@@ -34,7 +15,12 @@ export default function Main() {
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
         </div>
-
+        <Image
+          src="https://res.cloudinary.com/dghrm5axr/image/upload/v1747754455/방울방울구름_vpwicj.jpg"
+          alt="방울방울 구름"
+          width={400}
+          height={300}
+        />
         <div
           ref={containerRef}
           className="h-full bg-white flex flex-col justify-center overflow-y-scroll"
