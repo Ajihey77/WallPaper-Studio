@@ -12,5 +12,7 @@ export default async function handler(res: NextApiResponse) {
     const { res } = await cloudinary.search
       .expression("folder:list/*")
       .execute();
+
+    res.json({ images: res });
   } catch {}
 }
