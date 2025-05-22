@@ -2,11 +2,33 @@
 
 import Image from "next/image";
 import arrow from "../ui/asset/image/arrow.svg";
-import MainImageCard from "../ui/main-image-card";
 import { UseScrollDirection } from "../hooks/use-scroll-direction";
+import { useEffect, useState } from "react";
 
 export default function Main() {
   const { containerRef } = UseScrollDirection();
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await fetch("/api/photos");
+
+        if (!response.ok) {
+          const errText = await response.text();
+          console.error("Failed fetch:", response.status, errText);
+          return;
+        }
+
+        const data = await response.json();
+        setImages(data.images);
+      } catch (err) {
+        console.error("Fetch or parse error:", err);
+      } finally {
+      }
+    };
+    getData();
+  });
 
   return (
     <div className="w-screen h-screen flex justify-center items-center overflow-hidden">
@@ -15,19 +37,14 @@ export default function Main() {
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
         </div>
-        <Image
-          src="https://res.cloudinary.com/dghrm5axr/image/upload/v1747754455/방울방울구름_vpwicj.jpg"
-          alt="방울방울 구름"
-          width={400}
-          height={300}
-        />
         <div
           ref={containerRef}
           className="h-full bg-white flex flex-col justify-center overflow-y-scroll"
         >
           <div className="grid grid-cols-4 w-full auto-rows-[calc(92vh/3)] h-screen gap-4">
-            {Array.from({ length: 60 }).map((_, i) => (
-              <MainImageCard key={i} />
+            {images.map((img: any, i) => (
+              <img key={img.public_id} src={img.secure_url} />
+              // <MainImageCard key={i} />
             ))}
           </div>
         </div>
