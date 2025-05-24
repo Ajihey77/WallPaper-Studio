@@ -4,6 +4,7 @@ import Image from "next/image";
 import arrow from "../ui/asset/image/arrow.svg";
 import { UseScrollDirection } from "../hooks/use-scroll-direction";
 import { useEffect, useState } from "react";
+import MainImageCard from "../ui/main-image-card";
 
 export default function Main() {
   const { containerRef } = UseScrollDirection();
@@ -42,9 +43,8 @@ export default function Main() {
           className="h-full bg-white flex flex-col justify-center overflow-y-scroll"
         >
           <div className="grid grid-cols-4 w-full auto-rows-[calc(92vh/3)] h-screen gap-4">
-            {images.map((img: any, i) => (
-              <img key={img.public_id} src={img.secure_url} />
-              // <MainImageCard key={i} />
+            {images.map((img: { public_id: string; secure_url: string }) => (
+              <MainImageCard key={img.public_id} src={img.secure_url} />
             ))}
           </div>
         </div>

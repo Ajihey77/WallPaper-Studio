@@ -1,3 +1,5 @@
-export default function MainImageCard() {
-  return <div className="w-full aspect-square bg-gray-200" />;
+import Image from "next/image";
+
+export default function MainImageCard({ src }: { src: string }) {
+  return <Image src={src} alt="이미지" />;
 }
