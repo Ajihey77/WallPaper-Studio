@@ -1,20 +1,13 @@
-import { v2 as cloudinary } from "cloudinary";
 import MainScrollView from "../ui/main-scroll-view";
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-  api_key: process.env.CLOUDINARY_API_KEY!,
-  api_secret: process.env.CLOUDINARY_API_SECRET!,
-});
-
 async function getImages() {
-  console.log("🌐 Cloudinary API 호출");
-  const result = await cloudinary.search
-    .expression("folder:list/*")
-    .sort_by("created_at", "desc")
-    .max_results(30)
-    .execute();
-  return result.resources;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/photos`, {
+    next: { revalidate: 3600 },
+  });
+
+  if (!res.ok) throw new Error("이미지 로딩 실패");
+  const data = await res.json();
+  return data.resources;
 }
 
 export default async function Main() {

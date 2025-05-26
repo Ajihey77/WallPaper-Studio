@@ -10,8 +10,8 @@ export default function MainImageCard({
   return (
     <div
       style={{
-        width: "200px",
-        height: "200px",
+        width: "180px",
+        height: "180px",
         position: "relative",
         overflow: "hidden",
       }}
