@@ -27,7 +27,7 @@ export default function MainScrollView({ images }: { images: any }) {
               ) => (
                 <div
                   key={img.public_id}
-                  className="flex items-center justify-center" // ⭐ 여기!
+                  className="flex items-center justify-center"
                 >
                   <MainImageCard src={img.secure_url} priority={index < 2} />
                 </div>
