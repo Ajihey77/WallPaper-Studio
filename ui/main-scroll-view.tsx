@@ -5,9 +5,11 @@ import React from "react";
 import MainImageCard from "./main-image-card";
 import { UseScrollDirection } from "../hooks/use-scroll-direction";
 import arrow from "../ui/asset/image/arrow.svg";
+import Link from "next/link";
 
 export default function MainScrollView({ images }: { images: any }) {
   const { containerRef } = UseScrollDirection();
+  console.log(images);
   return (
     <div className="w-screen h-screen flex justify-center items-center overflow-hidden">
       <div className="flex flex-row items-center justify-center gap-4 w-full h-full max-w-[1920px] max-h-[87vh] ">
@@ -25,12 +27,14 @@ export default function MainScrollView({ images }: { images: any }) {
                 img: { public_id: string; secure_url: string },
                 index: number
               ) => (
-                <div
-                  key={img.public_id}
-                  className="flex items-center justify-center"
-                >
-                  <MainImageCard src={img.secure_url} priority={index < 2} />
-                </div>
+                <Link key={img.public_id} href={`/preview/${img.public_id}`}>
+                  <div
+                    key={img.public_id}
+                    className="flex items-center justify-center"
+                  >
+                    <MainImageCard src={img.secure_url} priority={index < 2} />
+                  </div>
+                </Link>
               )
             )}
           </div>

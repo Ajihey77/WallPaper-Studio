@@ -1,14 +1,15 @@
-"use client";
-
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { getImg } from "../../../../lib/cloudinary";
 
-export default function ImagePreview() {
-  const { id } = useParams();
-
+export default async function ImagePreview({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const images = await getImg(params.id);
   return (
     <div>
-      <Image src={} alt="미리보기" />
+      <Image src={images.secure_url} alt="미리보기" />
     </div>
   );
 }
