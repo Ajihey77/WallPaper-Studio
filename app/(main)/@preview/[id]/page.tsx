@@ -1,5 +1,19 @@
 import Image from "next/image";
-import { getImg } from "../../../../lib/cloudinary";
+import { getAllImg, getImg } from "../../../../lib/cloudinary";
+
+// 정적으로 미리 생성하기 위한 설정
+export const dynamicParams = false;
+
+// 빌드시점에 모든 페이지를 미리 생성하여 동적 라우팅을 정적으로 처리한다.
+export async function generateStaticParams() {
+  const images = await getAllImg();
+  console.log(
+    "빌드시 정적으로 생성되는 id 목록:",
+    images.map((img: any) => img.public_id)
+  );
+
+  return images.map((img: any) => ({ id: img.public_id }));
+}
 
 export default async function ImagePreview({
   params,
