@@ -27,7 +27,7 @@ export default function MainScrollView({ images }: { images: any }) {
                 img: { public_id: string; secure_url: string },
                 index: number
               ) => (
-                <Link key={img.public_id} href={`/preview/${img.public_id}`}>
+                <Link key={img.public_id} href={`/@preview/${img.public_id}`}>
                   <div
                     key={img.public_id}
                     className="flex items-center justify-center"
