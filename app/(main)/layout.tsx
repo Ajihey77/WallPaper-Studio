@@ -6,9 +6,9 @@ export default function MainLayout({
   preview: React.ReactNode;
 }) {
   return (
-    <>
-      {children}
-      {preview}
-    </>
+    <div className="flex">
+      <div className="w-2/3 p-4">{children}</div>
+      <div className="w-1/3 border-l p-4">{preview}</div>
+    </div>
   );
 }
