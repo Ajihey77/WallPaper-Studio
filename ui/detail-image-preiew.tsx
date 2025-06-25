@@ -28,7 +28,7 @@ export default function ImagePreview({ id }: { id: string }) {
 
   return (
     <div>
-      <Image src={image.secure_url} alt="미리보기" width={500} height={500} />
+      <Image src={image.secure_url} alt="미리보기" width={300} height={500} />
     </div>
   );
 }
