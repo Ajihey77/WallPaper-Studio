@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import PhotoFrame from "./photo-frame";
 
 export default function ImagePreview({ id }: { id: string }) {
   const [image, setImage] = useState<{ secure_url: string } | null>(null);
@@ -27,8 +28,10 @@ export default function ImagePreview({ id }: { id: string }) {
   if (!image) return <p>로딩 중...</p>;
 
   return (
-    <div>
-      <Image src={image.secure_url} alt="미리보기" width={300} height={500} />
-    </div>
+    <>
+      <PhotoFrame>
+        <Image src={image.secure_url} alt="미리보기" width={300} height={500} />
+      </PhotoFrame>
+    </>
   );
 }

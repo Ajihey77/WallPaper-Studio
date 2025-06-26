@@ -6,6 +6,7 @@ import MainImageCard from "./main-image-card";
 import { UseScrollDirection } from "../hooks/use-scroll-direction";
 import arrow from "../ui/asset/image/arrow.svg";
 import Link from "next/link";
+import PhotoFrame from "./photo-frame";
 
 export default function MainScrollView({ images }: { images: any }) {
   const { containerRef } = UseScrollDirection();
@@ -40,9 +41,7 @@ export default function MainScrollView({ images }: { images: any }) {
           </div>
         </div>
 
-        <div className="relative h-full w-auto max-w-[374px] aspect-[374/800] ml-4 flex items-center justify-center">
-          <div className="w-full h-full rounded-[45px] border border-black bg-cover bg-center absolute inset-0 z-0" />
-
+        {/* <PhotoFrame>
           <Image
             src={arrow}
             alt="화살표"
@@ -51,7 +50,7 @@ export default function MainScrollView({ images }: { images: any }) {
           <span className="z-10 font-bold text-[1.5vw] font-['Anonymous_Pro'] whitespace-nowrap">
             Please select a photo
           </span>
-        </div>
+        </PhotoFrame> */}
 
         <div className="flex flex-col items-center justify-center gap-[4vh] h-full min-w-[53px] ml-4">
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
