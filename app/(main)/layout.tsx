@@ -8,7 +8,7 @@ export default function MainLayout({
   return (
     <div className="flex">
       <div className="w-3/4">{children}</div>
-      <div className="w-1/4 pl-4">{preview}</div>
+      <div className="w-1/4 flex justify-center items-center">{preview}</div>
     </div>
   );
 }

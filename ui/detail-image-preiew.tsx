@@ -25,12 +25,20 @@ export default function ImagePreview({ id }: { id: string }) {
   }, [id]);
 
   if (error) return <p>{error}</p>;
-  if (!image) return <p>로딩 중...</p>;
 
   return (
     <>
       <PhotoFrame>
-        <Image src={image.secure_url} alt="미리보기" width={300} height={500} />
+        {image ? (
+          <Image
+            src={image.secure_url}
+            alt="미리보기"
+            width={300}
+            height={500}
+          />
+        ) : (
+          <p>로딩 중...</p>
+        )}
       </PhotoFrame>
     </>
   );

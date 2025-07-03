@@ -9,7 +9,7 @@ export default function PhotoFrame({
 }) {
   return (
     <>
-      <div className="relative h-full w-auto max-w-[300px] aspect-[374/800] ml-4 flex items-center justify-center">
+      <div className="relative h-[87vh] w-auto max-w-[300px] aspect-[374/800] ml-4 flex items-center justify-center">
         <div className="w-full h-full rounded-[45px] border border-black bg-cover bg-center absolute inset-0 z-0" />
         <Image
           src={arrow}

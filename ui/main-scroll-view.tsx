@@ -1,19 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import MainImageCard from "./main-image-card";
 import { UseScrollDirection } from "../hooks/use-scroll-direction";
-import arrow from "../ui/asset/image/arrow.svg";
 import Link from "next/link";
-import PhotoFrame from "./photo-frame";
 
 export default function MainScrollView({ images }: { images: any }) {
   const { containerRef } = UseScrollDirection();
   console.log(images);
   return (
-    <div className="w-screen h-screen flex justify-center items-center overflow-hidden">
-      <div className="flex flex-row items-center justify-center gap-4 w-full h-full max-w-[1920px] max-h-[87vh] ">
+    <div className="w-screen h-screen flex items-center overflow-hidden translate-x-[-70px]">
+      <div className="flex flex-row items-center justify-center gap-4 w-full h-full max-w-[1920px] max-h-[87vh] translate-x-[-70px]">
         <div className="flex flex-col items-center justify-center gap-[4vh] h-full min-w-[53px]">
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
