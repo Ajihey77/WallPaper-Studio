@@ -12,7 +12,9 @@ export default function MainScrollView({ images }: { images: any }) {
     <div className="w-screen h-screen flex items-center overflow-hidden translate-x-[-70px]">
       <div className="flex flex-row items-center justify-center gap-4 w-full h-full max-w-[1920px] max-h-[87vh] translate-x-[-70px]">
         <div className="flex flex-col items-center justify-center gap-[4vh] h-full min-w-[53px]">
-          <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
+          <Link href={"/Wishlist"}>
+            <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
+          </Link>
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
         </div>
         <div
@@ -49,10 +51,10 @@ export default function MainScrollView({ images }: { images: any }) {
           </span>
         </PhotoFrame> */}
 
-        <div className="flex flex-col items-center justify-center gap-[4vh] h-full min-w-[53px] ml-4">
+        {/* <div className="flex flex-col items-center justify-center gap-[4vh] h-full min-w-[53px] ml-4">
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
           <div className="w-[53px] h-[53px] bg-[#d9d9d9]" />
-        </div>
+        </div> */}
       </div>
     </div>
   );
