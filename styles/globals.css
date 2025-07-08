@@ -5,3 +5,12 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 더 얇은 스크롤바 */
+.thinner-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.thinner-scrollbar::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
