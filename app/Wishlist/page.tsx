@@ -88,11 +88,11 @@ export default function Wishlist() {
       <div className="w-screen h-screen flex flex-row">
         {/* 사이드바 */}
         <aside
-          className="relative flex flex-col items-start overflow-y-auto bg-[#d9d9d9] scrollbar-thin scrollbar-thumb-gray-200 thinner-scrollbar"
+          className="relative flex flex-col items-center overflow-y-auto bg-[#d9d9d9] scrollbar-thin
+          scrollbar-thumb-gray-200 thinner-scrollbar"
           style={{
             width: `${(580 / 1920) * 100}vw`,
             height: "100vh",
-            paddingLeft: `${(66 / 1920) * 100}vw`,
             paddingTop: `${(78 / 1080) * 100}vh`,
             boxSizing: "border-box",
           }}
@@ -100,7 +100,7 @@ export default function Wishlist() {
           <div className="font-normal text-black mb-[5.5vh]" style={{ fontSize: "2.2vw" }}>
             mobile model
           </div>
-          <div className="flex gap-[2vw] items-center mb-[2.7vh]">
+          <div className="flex gap-[2vw] items-center mb-[2.7vh] justify-center w-full">
             <button
               className={`text-black px-4 py-1 rounded-full transition-all duration-200 ${model === 'iphone' ? 'bg-white border border-black font-bold' : 'bg-transparent border border-transparent'}`}
               style={{ fontSize: "1.25vw" }}
@@ -118,7 +118,7 @@ export default function Wishlist() {
           </div>
           <div className="bg-black mb-[3.7vh]" style={{ width: `${(206 / 580) * 100}%`, height: 1 }} />
           {/* 모델별 프레임들 */}
-          <div className="flex flex-wrap gap-[1.5vw]">
+          <div className="flex flex-wrap gap-[1.5vw] justify-center w-full">
             {frames.map((frame, idx) => (
               <div
                 key={idx}
