@@ -83,6 +83,17 @@ export default function Wishlist() {
   // 미리보기용 실제 px 크기 계산
   const previewWidth = (Number(frames[selectedFrame].width.replace('vw','')) / maxFrameWidth) * baseWidth;
   const previewHeight = (Number(frames[selectedFrame].height.replace('vh','')) / maxFrameHeight) * baseHeight;
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      console.log("Selected file:", file.name);
+      // 파일 처리 로직 추가
+    }
+  };
+
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-white font-anonymous-pro overflow-hidden">
       <div className="w-screen h-screen flex flex-row">
@@ -147,7 +158,26 @@ export default function Wishlist() {
                 margin: "auto",
               }}
             />
-            <span className="z-10 text-[#aaa] text-center" style={{ fontSize: "1.2vw" }}>미리보기 영역</span>
+            <button
+              type="button"
+              className="z-10 flex flex-col items-center justify-center text-[#aaa] text-center hover:text-blue-500 focus:outline-none"
+              style={{ fontSize: "2.5vw", background: "none", border: "none", cursor: "pointer" }}
+              onClick={() => {
+                if (fileInputRef.current) fileInputRef.current.click();
+              }}
+            >
+              <svg width="2em" height="2em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="11" stroke="#000" strokeWidth="0.2" fill="none"/>
+                <path d="M12 7v10M7 12h10" stroke="#000" strokeWidth="0.3" strokeLinecap="round"/>
+              </svg>
+              <span style={{ fontSize: "0.9vw", marginTop: 4 }}>사진 첨부</span>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
+            </button>
           </div>
         </main>
       </div>
