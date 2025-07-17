@@ -234,7 +234,14 @@ export default function Wishlist() {
               style={{
                 width: `${previewWidth}px`,
                 height: `${previewHeight}px`,
-                backgroundImage: resultUrl ? `url(${resultUrl})` : "none",
+                backgroundImage: resultUrl
+                  ? `url(${resultUrl})`
+                  : imageSrc
+                  ? `url(${imageSrc})`
+                  : "none",
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
               }}
             />
             <button
@@ -274,27 +281,28 @@ export default function Wishlist() {
               />
             </button>
           </div>
-
           {imageSrc && (
-            <div className="mt-8 w-full max-w-md px-4">
+            <div
+              className="relative border border-blue-500"
+              style={{
+                width: frames[selectedFrame].width,
+                height: frames[selectedFrame].height,
+              }}
+            >
               <ReactCropper
                 src={imageSrc}
-                style={{ height: "100%", width: "100%" }}
-                aspectRatio={1179 / 2556}
-                zoomable
-                movable
-                scalable
-                cropBoxResizable
                 ref={cropperRef}
+                style={{ width: "100%", height: "100%" }}
                 viewMode={1}
-                dragMode="move"
+                guides={false}
+                background={false}
+                responsive={true}
+                autoCropArea={1}
+                checkOrientation={false}
               />
-              <button
-                onClick={handleCropAndUpload}
-                className="mt-4 w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800"
-              >
-                크롭 후 배경화면 만들기
-              </button>
+
+              {/* 프레임 테두리 - 임시로 노란색 */}
+              <div className="absolute inset-0 pointer-events-none border-4 border-amber-700 rounded-[45px] z-10" />
             </div>
           )}
 
