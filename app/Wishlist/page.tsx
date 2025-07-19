@@ -294,10 +294,11 @@ export default function Wishlist() {
                 ref={cropperRef}
                 style={{ width: "100%", height: "100%" }}
                 viewMode={1}
-                guides={false}
+                guides={true}
+                cropBoxResizable={true}
                 background={false}
                 responsive={true}
-                autoCropArea={1}
+                autoCropArea={0.8}
                 checkOrientation={false}
               />
 
