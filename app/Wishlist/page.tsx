@@ -181,7 +181,7 @@ export default function Wishlist() {
               style={{ fontSize: "1.25vw" }}
               onClick={() => setModel("iphone")}
             >
-              iphone
+              iphone힝
             </button>
             <button
               className={`text-black px-4 py-1 rounded-full transition-all duration-200 ${
