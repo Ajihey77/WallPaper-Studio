@@ -152,7 +152,7 @@ export default function Wishlist() {
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-white font-anonymous-pro overflow-hidden">
+    <div className="w-screen h-screen flex items-center justify-center bg-white font-anonymous-pro ">
       <div className="w-screen h-screen flex flex-row">
         {/* 사이드바 */}
         <aside
@@ -181,7 +181,7 @@ export default function Wishlist() {
               style={{ fontSize: "1.25vw" }}
               onClick={() => setModel("iphone")}
             >
-              iphone힝
+              iphone
             </button>
             <button
               className={`text-black px-4 py-1 rounded-full transition-all duration-200 ${
@@ -283,27 +283,31 @@ export default function Wishlist() {
           </div>
           {imageSrc && (
             <div
-              className="relative border border-blue-500"
-              style={{
-                width: frames[selectedFrame].width,
-                height: frames[selectedFrame].height,
-              }}
+              className="flex flex-row gap-8 items-start mt-8"
+              // gap-8: 두 영역 사이 간격, 필요에 따라 조정
             >
-              <ReactCropper
-                src={imageSrc}
-                ref={cropperRef}
-                style={{ width: "100%", height: "100%" }}
-                viewMode={1}
-                guides={true}
-                cropBoxResizable={true}
-                background={false}
-                responsive={true}
-                autoCropArea={0.8}
-                checkOrientation={false}
-              />
-
-              {/* 프레임 테두리 - 임시로 노란색 */}
-              <div className="absolute inset-0 pointer-events-none border-4 border-amber-700 rounded-[45px] z-10" />
+              {/* 미리보기 프레임 */}
+ 
+              {/* ReactCropper */}
+              <div
+                style={{
+                  width: frames[selectedFrame].width,
+                  height: frames[selectedFrame].height,
+                }}
+              >
+                <ReactCropper
+                  src={imageSrc}
+                  ref={cropperRef}
+                  style={{ width: "100%", height: "100%" }}
+                  viewMode={1}
+                  guides={true}
+                  cropBoxResizable={true}
+                  background={false}
+                  responsive={true}
+                  autoCropArea={0.8}
+                  checkOrientation={false}
+                />
+              </div>
             </div>
           )}
 

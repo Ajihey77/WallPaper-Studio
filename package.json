@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "cloudinary": "^2.6.1",
-    "cropperjs": "^2.0.0",
+    "cropperjs": "^1.6.2",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
