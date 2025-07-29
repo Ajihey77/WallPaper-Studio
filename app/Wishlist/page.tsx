@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import ReactCropper, { ReactCropperElement } from "react-cropper";
 import CropperJs from "cropperjs";
-
+import "cropperjs/dist/cropper.css";
 // 1920x1080 기준을 100vw, 100vh로 환산
 // px → vw/vh 변환: (px/1920)*100vw, (px/1080)*100vh
 
@@ -101,7 +101,9 @@ export default function Wishlist() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cropperRef = useRef<ReactCropperElement>(null);
 
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [imageSrc, setImageSrc] = useState<string>(
+    "../../ui/image/wallpaper.jpg"
+  );
   const [resultUrl, setResultUrl] = useState<string | null>(null);
 
   const previewWidth = 300;
@@ -152,7 +154,7 @@ export default function Wishlist() {
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-white font-anonymous-pro ">
+    <div className="w-screen h-screen flex items-center justify-center bg-white font-anonymous-pro overflow-hidden">
       <div className="w-screen h-screen flex flex-row">
         {/* 사이드바 */}
         <aside
@@ -224,9 +226,36 @@ export default function Wishlist() {
           </div>
         </aside>
         {/* 미리보기 영역 */}
-        <main className="flex-1 h-screen flex flex-col items-center justify-center relative">
+        <main className="flex h-screen items-center justify-center gap-8 px-4">
           <div
-            className="relative w-auto max-w-[300px] aspect-[374/800] ml-4 flex items-center justify-center"
+            className="relative border border-blue-500 flex flex-col items-center"
+            style={{
+              width: frames[selectedFrame].width,
+              height: frames[selectedFrame].height,
+            }}
+          >
+            <ReactCropper
+              src={imageSrc}
+              ref={cropperRef}
+              style={{ width: "100%", height: "100%" }}
+              viewMode={1}
+              guides={true}
+              cropBoxResizable={true}
+              background={false}
+              responsive={true}
+              autoCropArea={0.8}
+              checkOrientation={false}
+            />
+            <button
+              onClick={handleCropAndUpload}
+              className="absolute bottom-[-3rem] w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800"
+            >
+              크롭 후 배경화면 만들기
+            </button>
+          </div>
+          {/* 왼쪽: 미리보기 영역 */}
+          <div
+            className="relative w-auto max-w-[300px] aspect-[374/800] flex items-center justify-center"
             style={{ height: "87vh" }}
           >
             <div
@@ -262,7 +291,6 @@ export default function Wishlist() {
                   r="11"
                   stroke="#000"
                   strokeWidth="0.2"
-                  fill="none"
                 />
                 <path
                   d="M12 7v10M7 12h10"
@@ -281,46 +309,20 @@ export default function Wishlist() {
               />
             </button>
           </div>
-          {imageSrc && (
-            <div
-              className="flex flex-row gap-8 items-start mt-8"
-              // gap-8: 두 영역 사이 간격, 필요에 따라 조정
-            >
-              {/* 미리보기 프레임 */}
- 
-              {/* ReactCropper */}
-              <div
-                style={{
-                  width: frames[selectedFrame].width,
-                  height: frames[selectedFrame].height,
-                }}
-              >
-                <ReactCropper
-                  src={imageSrc}
-                  ref={cropperRef}
-                  style={{ width: "100%", height: "100%" }}
-                  viewMode={1}
-                  guides={true}
-                  cropBoxResizable={true}
-                  background={false}
-                  responsive={true}
-                  autoCropArea={0.8}
-                  checkOrientation={false}
-                />
-              </div>
-            </div>
-          )}
+          {/* 오른쪽: 크롭 영역 */}
 
+          {/* 다운로드 링크 */}
           {resultUrl && (
             <a
               href={resultUrl}
               download="wallpaper.jpg"
-              className="mt-6 text-blue-600 hover:underline"
+              className="absolute bottom-6 text-blue-600 hover:underline"
             >
               👉 배경화면 다운로드
             </a>
           )}
         </main>
+
         {/* <main className="flex-1 h-screen flex items-center justify-center relative">
           <div
             className="relative w-auto max-w-[300px] aspect-[374/800] ml-4 flex items-center justify-center"
