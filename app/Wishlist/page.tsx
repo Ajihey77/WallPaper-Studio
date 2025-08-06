@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactCropper, { ReactCropperElement } from "react-cropper";
 import CropperJs from "cropperjs";
 import "cropperjs/dist/cropper.css";
@@ -73,20 +73,26 @@ export default function Wishlist() {
   // 선택된 프레임 인덱스 상태
   const [selectedFrame, setSelectedFrame] = useState(0);
   // 모델이 바뀌면 프레임 인덱스 초기화
-  React.useEffect(() => {
-    setSelectedFrame(0);
-  }, [model]);
+
   // 현재 프레임 배열
   const frames = model === "iphone" ? iphoneFrames : galaxyFrames;
-  // 미리보기 기준 크기
-  // const baseWidth = 300; // px
-  // const baseHeight = 600; // px
-  // // 최대값(비율 기준)
-  // const maxFrameWidth = Math.max(...frames.map(f => Number(f.width.replace('vw',''))));
-  // const maxFrameHeight = Math.max(...frames.map(f => Number(f.height.replace('vh',''))));
-  // // 미리보기용 실제 px 크기 계산
-  // const previewWidth = (Number(frames[selectedFrame].width.replace('vw','')) / maxFrameWidth) * baseWidth;
-  // const previewHeight = (Number(frames[selectedFrame].height.replace('vh','')) / maxFrameHeight) * baseHeight;
+  //미리보기 기준 크기
+  const baseWidth = 300; // px
+  const baseHeight = 600; // px
+  // 최대값(비율 기준)
+  const maxFrameWidth = Math.max(
+    ...frames.map((f) => Number(f.width.replace("vw", "")))
+  );
+  const maxFrameHeight = Math.max(
+    ...frames.map((f) => Number(f.height.replace("vh", "")))
+  );
+  // 미리보기용 실제 px 크기 계산
+  const previewWidth =
+    (Number(frames[selectedFrame].width.replace("vw", "")) / maxFrameWidth) *
+    baseWidth;
+  const previewHeight =
+    (Number(frames[selectedFrame].height.replace("vh", "")) / maxFrameHeight) *
+    baseHeight;
 
   // const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -106,8 +112,8 @@ export default function Wishlist() {
   );
   const [resultUrl, setResultUrl] = useState<string | null>(null);
 
-  const previewWidth = 300;
-  const previewHeight = (300 * 800) / 374; // 비율 유지
+  // const previewWidth = 300;
+  // const previewHeight = (300 * 800) / 374; // 비율 유지
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -152,6 +158,29 @@ export default function Wishlist() {
       }
     }, "image/jpeg");
   };
+
+  useEffect(() => {
+    setSelectedFrame(0);
+  }, [model]);
+
+  useEffect(() => {
+    const cropper = cropperRef.current?.cropper;
+    if (cropper && previewWidth && previewHeight) {
+      cropper.setAspectRatio(previewWidth / previewHeight);
+      console.log(
+        "previewWidth",
+        previewWidth,
+        "previewHeight",
+        previewHeight,
+        previewWidth / previewHeight
+      );
+
+      cropper.setCropBoxData({
+        width: previewWidth,
+        height: previewHeight,
+      });
+    }
+  }, [previewWidth, previewHeight]);
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-white font-anonymous-pro overflow-hidden">
@@ -226,7 +255,7 @@ export default function Wishlist() {
           </div>
         </aside>
         {/* 미리보기 영역 */}
-        <main className="flex h-screen items-center justify-center gap-8 px-4">
+        <main className="flex h-screen items-center justify-between gap-80 px-4">
           <div
             className="relative border border-blue-500 flex flex-col items-center"
             style={{
@@ -238,6 +267,8 @@ export default function Wishlist() {
               src={imageSrc}
               ref={cropperRef}
               style={{ width: "100%", height: "100%" }}
+              initialAspectRatio={previewWidth / previewHeight}
+              aspectRatio={previewWidth / previewHeight}
               viewMode={1}
               guides={true}
               cropBoxResizable={true}
@@ -268,7 +299,7 @@ export default function Wishlist() {
                   : imageSrc
                   ? `url(${imageSrc})`
                   : "none",
-                backgroundSize: "contain",
+                backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
               }}
