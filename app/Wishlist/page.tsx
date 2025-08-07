@@ -68,6 +68,9 @@ export default function Wishlist() {
     { name: "S6 Edge", width: "6vw", height: "22vh" },
     { name: "S6", width: "5vw", height: "20vh" },
   ];
+
+  const [cropButton, setCropButton] = useState<boolean>(false);
+
   // 모델 상태: 'iphone' 또는 'galaxy'
   const [model, setModel] = useState<"iphone" | "galaxy">("iphone");
   // 선택된 프레임 인덱스 상태
@@ -257,7 +260,7 @@ export default function Wishlist() {
         {/* 미리보기 영역 */}
         <main className="flex h-screen items-center justify-between gap-80 px-4">
           <div
-            className="relative border border-blue-500 flex flex-col items-center"
+            className="relative flex flex-col items-center"
             style={{
               width: frames[selectedFrame].width,
               height: frames[selectedFrame].height,
@@ -279,7 +282,9 @@ export default function Wishlist() {
             />
             <button
               onClick={handleCropAndUpload}
-              className="absolute bottom-[-3rem] w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800"
+              className={`absolute bottom-[-3rem] w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 ${
+                cropButton ? "block" : "hidden"
+              }`}
             >
               크롭 후 배경화면 만들기
             </button>
@@ -313,7 +318,10 @@ export default function Wishlist() {
                 border: "none",
                 cursor: "pointer",
               }}
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => {
+                fileInputRef.current?.click();
+                setCropButton(true);
+              }}
             >
               <svg width="2em" height="2em" viewBox="0 0 24 24" fill="none">
                 <circle
