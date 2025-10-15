@@ -1,122 +1,34 @@
 "use client";
 
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import ReactCropper, { ReactCropperElement } from "react-cropper";
-import CropperJs from "cropperjs";
-import "cropperjs/dist/cropper.css";
-// 1920x1080 기준을 100vw, 100vh로 환산
-// px → vw/vh 변환: (px/1920)*100vw, (px/1080)*100vh
+import { galaxyFrames, iphoneFrames } from "../../data/deviceFrames";
 
 export default function Wishlist() {
-  // 모델별 프레임 데이터
-  const iphoneFrames = [
-    { name: "iPhone 15 Pro Max", width: "7vw", height: "23vh" },
-    { name: "iPhone 15 Pro", width: "7vw", height: "24vh" },
-    { name: "iPhone 15", width: "6vw", height: "22vh" },
-    { name: "iPhone 14 Pro Max", width: "7vw", height: "25vh" },
-    { name: "iPhone 14 Pro", width: "6vw", height: "22vh" },
-    { name: "iPhone 14", width: "6vw", height: "21vh" },
-    { name: "iPhone 13 Pro Max", width: "7vw", height: "19vh" },
-    { name: "iPhone 13 Pro", width: "6vw", height: "17vh" },
-    { name: "iPhone 13", width: "5vw", height: "15vh" },
-    { name: "iPhone 12 Pro Max", width: "7vw", height: "23vh" },
-    { name: "iPhone 12 Pro", width: "6vw", height: "21vh" },
-    { name: "iPhone 12", width: "5vw", height: "15vh" },
-    { name: "iPhone 11 Pro Max", width: "7vw", height: "23vh" },
-    { name: "iPhone 11 Pro", width: "6vw", height: "21vh" },
-    { name: "iPhone 11", width: "5vw", height: "15vh" },
-    { name: "iPhone XS Max", width: "7vw", height: "23vh" },
-    { name: "iPhone XS", width: "6vw", height: "21vh" },
-    { name: "iPhone XR", width: "5vw", height: "15vh" },
-    { name: "iPhone X", width: "6vw", height: "21vh" },
-    { name: "iPhone 8 Plus", width: "7vw", height: "23vh" },
-    { name: "iPhone 8", width: "5vw", height: "15vh" },
-    { name: "iPhone 7 Plus", width: "7vw", height: "23vh" },
-    { name: "iPhone 7", width: "5vw", height: "15vh" },
-    { name: "iPhone 6s Plus", width: "7vw", height: "23vh" },
-    { name: "iPhone 6s", width: "5vw", height: "15vh" },
-    { name: "iPhone 6 Plus", width: "7vw", height: "23vh" },
-    { name: "iPhone 6", width: "5vw", height: "15vh" },
-  ];
-  const galaxyFrames = [
-    { name: "S24 Ultra", width: "7vw", height: "24vh" },
-    { name: "S24+", width: "7vw", height: "24vh" },
-    { name: "S24", width: "6vw", height: "22vh" },
-    { name: "S23 Ultra", width: "7vw", height: "24vh" },
-    { name: "S23+", width: "7vw", height: "24vh" },
-    { name: "S23", width: "6vw", height: "22vh" },
-    { name: "S22 Ultra", width: "7vw", height: "24vh" },
-    { name: "S22+", width: "7vw", height: "24vh" },
-    { name: "S22", width: "6vw", height: "22vh" },
-    { name: "S21 Ultra", width: "7vw", height: "24vh" },
-    { name: "S21+", width: "7vw", height: "24vh" },
-    { name: "S21", width: "6vw", height: "22vh" },
-    { name: "S20 Ultra", width: "7vw", height: "24vh" },
-    { name: "S20+", width: "7vw", height: "24vh" },
-    { name: "S20", width: "6vw", height: "22vh" },
-    { name: "S10 5G", width: "7vw", height: "24vh" },
-    { name: "S10+", width: "7vw", height: "24vh" },
-    { name: "S10", width: "6vw", height: "22vh" },
-    { name: "S10e", width: "5vw", height: "20vh" },
-    { name: "S9+", width: "7vw", height: "24vh" },
-    { name: "S9", width: "6vw", height: "22vh" },
-    { name: "S8+", width: "7vw", height: "24vh" },
-    { name: "S8", width: "6vw", height: "22vh" },
-    { name: "S7 Edge", width: "7vw", height: "24vh" },
-    { name: "S7", width: "6vw", height: "22vh" },
-    { name: "S6 Edge+", width: "7vw", height: "24vh" },
-    { name: "S6 Edge", width: "6vw", height: "22vh" },
-    { name: "S6", width: "5vw", height: "20vh" },
-  ];
-
-  const [cropButton, setCropButton] = useState<boolean>(false);
-
-  // 모델 상태: 'iphone' 또는 'galaxy'
   const [model, setModel] = useState<"iphone" | "galaxy">("iphone");
-  // 선택된 프레임 인덱스 상태
   const [selectedFrame, setSelectedFrame] = useState(0);
-  // 모델이 바뀌면 프레임 인덱스 초기화
-
-  // 현재 프레임 배열
   const frames = model === "iphone" ? iphoneFrames : galaxyFrames;
-  //미리보기 기준 크기
-  const baseWidth = 300; // px
-  const baseHeight = 600; // px
-  // 최대값(비율 기준)
-  const maxFrameWidth = Math.max(
-    ...frames.map((f) => Number(f.width.replace("vw", "")))
-  );
-  const maxFrameHeight = Math.max(
-    ...frames.map((f) => Number(f.height.replace("vh", "")))
-  );
-  // 미리보기용 실제 px 크기 계산
-  const previewWidth =
-    (Number(frames[selectedFrame].width.replace("vw", "")) / maxFrameWidth) *
-    baseWidth;
-  const previewHeight =
-    (Number(frames[selectedFrame].height.replace("vh", "")) / maxFrameHeight) *
-    baseHeight;
-
-  // const fileInputRef = React.useRef<HTMLInputElement>(null);
-
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file) {
-  //     console.log("Selected file:", file.name);
-  //     // 파일 처리 로직 추가
-  //   }
-  // };
+  const currentFrame = frames[selectedFrame];
+  const aspectRatio = currentFrame.width / currentFrame.height;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const cropperRef = useRef<ReactCropperElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [imageSrc, setImageSrc] = useState<string>(
-    "../../ui/image/wallpaper.jpg"
-  );
+  const [imageSrc, setImageSrc] = useState<string>("");
   const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  // const previewWidth = 300;
-  // const previewHeight = (300 * 800) / 374; // 비율 유지
+  const [cropArea, setCropArea] = useState({ x: 0, y: 0, width: 0, height: 0 });
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeHandle, setResizeHandle] = useState<string>("");
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  const displayScale = 0.6;
+  const previewWidth = currentFrame.width * displayScale;
+  const previewHeight = currentFrame.height * displayScale;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -129,216 +41,570 @@ export default function Wishlist() {
     reader.readAsDataURL(file);
   };
 
-  const handleCropAndUpload = async () => {
-    if (!cropperRef.current) return;
-    const cropper: CropperJs | undefined = cropperRef.current?.cropper;
+  const drawCanvas = (img: HTMLImageElement, crop: typeof cropArea) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    if (!cropper) return;
-    const canvas = cropper.getCroppedCanvas();
-    // const cropper = cropperRef.current.getCroppedCanvas();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-    if (!cropper) return alert("크롭할 영역이 없습니다.");
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    canvas.toBlob(async (blob) => {
-      if (!blob) return;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(crop.x, crop.y, crop.width, crop.height);
+    ctx.clip();
+    ctx.clearRect(crop.x, crop.y, crop.width, crop.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
 
-      const formData = new FormData();
-      formData.append("file", blob, "cropped.jpg");
+    ctx.strokeStyle = "#3b82f6";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(crop.x, crop.y, crop.width, crop.height);
 
-      try {
-        const res = await fetch("/api/resize", {
-          method: "POST",
-          body: formData,
-        });
+    const handleSize = 12;
+    ctx.fillStyle = "#3b82f6";
 
-        if (!res.ok) throw new Error("서버 오류");
+    const corners = [
+      { x: crop.x, y: crop.y },
+      { x: crop.x + crop.width, y: crop.y },
+      { x: crop.x, y: crop.y + crop.height },
+      { x: crop.x + crop.width, y: crop.y + crop.height },
+    ];
 
-        const imageBlob = await res.blob();
-        const url = URL.createObjectURL(imageBlob);
-        setResultUrl(url);
-      } catch (err) {
-        alert("이미지 처리에 실패했습니다.");
+    const edges = [
+      { x: crop.x + crop.width / 2, y: crop.y },
+      { x: crop.x + crop.width / 2, y: crop.y + crop.height },
+      { x: crop.x, y: crop.y + crop.height / 2 },
+      { x: crop.x + crop.width, y: crop.y + crop.height / 2 },
+    ];
+
+    [...corners, ...edges].forEach((handle) => {
+      ctx.fillRect(
+        handle.x - handleSize / 2,
+        handle.y - handleSize / 2,
+        handleSize,
+        handleSize
+      );
+    });
+  };
+
+  useEffect(() => {
+    if (!imageSrc || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const img = new Image();
+
+    img.onload = () => {
+      imageRef.current = img;
+      canvas.width = previewWidth;
+      canvas.height = previewHeight;
+      const newCrop = initializeCropArea(canvas);
+      setCropArea(newCrop);
+      drawCanvas(img, newCrop);
+    };
+
+    img.src = imageSrc;
+  }, [imageSrc, previewWidth, previewHeight, aspectRatio]);
+
+  const getHandleAtPosition = (x: number, y: number) => {
+    const handleSize = 12;
+    const threshold = handleSize;
+
+    const corners = [
+      { x: cropArea.x, y: cropArea.y, handle: "nw" },
+      { x: cropArea.x + cropArea.width, y: cropArea.y, handle: "ne" },
+      { x: cropArea.x, y: cropArea.y + cropArea.height, handle: "sw" },
+      {
+        x: cropArea.x + cropArea.width,
+        y: cropArea.y + cropArea.height,
+        handle: "se",
+      },
+    ];
+
+    for (const corner of corners) {
+      if (
+        Math.abs(x - corner.x) < threshold &&
+        Math.abs(y - corner.y) < threshold
+      ) {
+        return corner.handle;
       }
-    }, "image/jpeg");
+    }
+
+    const edges = [
+      { x: cropArea.x + cropArea.width / 2, y: cropArea.y, handle: "n" },
+      {
+        x: cropArea.x + cropArea.width / 2,
+        y: cropArea.y + cropArea.height,
+        handle: "s",
+      },
+      { x: cropArea.x, y: cropArea.y + cropArea.height / 2, handle: "w" },
+      {
+        x: cropArea.x + cropArea.width,
+        y: cropArea.y + cropArea.height / 2,
+        handle: "e",
+      },
+    ];
+
+    for (const edge of edges) {
+      if (
+        Math.abs(x - edge.x) < threshold &&
+        Math.abs(y - edge.y) < threshold
+      ) {
+        return edge.handle;
+      }
+    }
+
+    if (
+      x >= cropArea.x &&
+      x <= cropArea.x + cropArea.width &&
+      y >= cropArea.y &&
+      y <= cropArea.y + cropArea.height
+    ) {
+      return "move";
+    }
+
+    return null;
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const handle = getHandleAtPosition(x, y);
+
+    if (handle === "move") {
+      setIsDragging(true);
+      setDragStart({ x: x - cropArea.x, y: y - cropArea.y });
+    } else if (handle) {
+      setIsResizing(true);
+      setResizeHandle(handle);
+      setDragStart({ x, y });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas || !imageRef.current) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (!isDragging && !isResizing) {
+      const handle = getHandleAtPosition(x, y);
+      if (handle === "move") {
+        canvas.style.cursor = "move";
+      } else if (handle === "nw" || handle === "se") {
+        canvas.style.cursor = "nwse-resize";
+      } else if (handle === "ne" || handle === "sw") {
+        canvas.style.cursor = "nesw-resize";
+      } else if (handle === "n" || handle === "s") {
+        canvas.style.cursor = "ns-resize";
+      } else if (handle === "w" || handle === "e") {
+        canvas.style.cursor = "ew-resize";
+      } else {
+        canvas.style.cursor = "default";
+      }
+    }
+
+    if (isDragging) {
+      const newX = Math.max(
+        0,
+        Math.min(x - dragStart.x, canvas.width - cropArea.width)
+      );
+      const newY = Math.max(
+        0,
+        Math.min(y - dragStart.y, canvas.height - cropArea.height)
+      );
+
+      const newCrop = { ...cropArea, x: newX, y: newY };
+      setCropArea(newCrop);
+      drawCanvas(imageRef.current, newCrop);
+    } else if (isResizing) {
+      const dx = x - dragStart.x;
+      const dy = y - dragStart.y;
+
+      let newCrop = { ...cropArea };
+
+      switch (resizeHandle) {
+        case "se":
+          const newWidth1 = Math.max(50, cropArea.width + dx);
+          const newHeight1 = newWidth1 / aspectRatio;
+          if (
+            cropArea.x + newWidth1 <= canvas.width &&
+            cropArea.y + newHeight1 <= canvas.height
+          ) {
+            newCrop.width = newWidth1;
+            newCrop.height = newHeight1;
+          }
+          break;
+        case "sw":
+          const newWidth2 = Math.max(50, cropArea.width - dx);
+          const newHeight2 = newWidth2 / aspectRatio;
+          if (
+            cropArea.x + dx >= 0 &&
+            cropArea.y + newHeight2 <= canvas.height
+          ) {
+            newCrop.x = cropArea.x + dx;
+            newCrop.width = newWidth2;
+            newCrop.height = newHeight2;
+          }
+          break;
+        case "ne":
+          const newWidth3 = Math.max(50, cropArea.width + dx);
+          const newHeight3 = newWidth3 / aspectRatio;
+          if (
+            cropArea.x + newWidth3 <= canvas.width &&
+            cropArea.y - (newHeight3 - cropArea.height) >= 0
+          ) {
+            newCrop.y = cropArea.y + cropArea.height - newHeight3;
+            newCrop.width = newWidth3;
+            newCrop.height = newHeight3;
+          }
+          break;
+        case "nw":
+          const newWidth4 = Math.max(50, cropArea.width - dx);
+          const newHeight4 = newWidth4 / aspectRatio;
+          if (
+            cropArea.x + dx >= 0 &&
+            cropArea.y - (newHeight4 - cropArea.height) >= 0
+          ) {
+            newCrop.x = cropArea.x + dx;
+            newCrop.y = cropArea.y + cropArea.height - newHeight4;
+            newCrop.width = newWidth4;
+            newCrop.height = newHeight4;
+          }
+          break;
+        case "e":
+        case "w":
+          const widthChange = resizeHandle === "e" ? dx : -dx;
+          const newWidth = Math.max(50, cropArea.width + widthChange);
+          const newHeight = newWidth / aspectRatio;
+          const heightDiff = (newHeight - cropArea.height) / 2;
+
+          if (
+            (resizeHandle === "e"
+              ? cropArea.x + newWidth <= canvas.width
+              : cropArea.x + (cropArea.width - newWidth) >= 0) &&
+            cropArea.y - heightDiff >= 0 &&
+            cropArea.y + cropArea.height + heightDiff <= canvas.height
+          ) {
+            newCrop.x =
+              resizeHandle === "e"
+                ? cropArea.x
+                : cropArea.x + (cropArea.width - newWidth);
+            newCrop.y = cropArea.y - heightDiff;
+            newCrop.width = newWidth;
+            newCrop.height = newHeight;
+          }
+          break;
+        case "n":
+        case "s":
+          const heightChange = resizeHandle === "s" ? dy : -dy;
+          const newHeight5 = Math.max(
+            50 / aspectRatio,
+            cropArea.height + heightChange
+          );
+          const newWidth5 = newHeight5 * aspectRatio;
+          const widthDiff = (newWidth5 - cropArea.width) / 2;
+
+          if (
+            (resizeHandle === "s"
+              ? cropArea.y + newHeight5 <= canvas.height
+              : cropArea.y + (cropArea.height - newHeight5) >= 0) &&
+            cropArea.x - widthDiff >= 0 &&
+            cropArea.x + cropArea.width + widthDiff <= canvas.width
+          ) {
+            newCrop.x = cropArea.x - widthDiff;
+            newCrop.y =
+              resizeHandle === "s"
+                ? cropArea.y
+                : cropArea.y + (cropArea.height - newHeight5);
+            newCrop.width = newWidth5;
+            newCrop.height = newHeight5;
+          }
+          break;
+      }
+
+      setCropArea(newCrop);
+      setDragStart({ x, y });
+      drawCanvas(imageRef.current, newCrop);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setIsResizing(false);
+    setResizeHandle("");
+  };
+
+  const handleReset = () => {
+    if (!canvasRef.current || !imageRef.current) return;
+
+    const canvas = canvasRef.current;
+    const newCrop = initializeCropArea(canvas);
+    setCropArea(newCrop);
+    drawCanvas(imageRef.current, newCrop);
+  };
+
+  const initializeCropArea = (canvas: HTMLCanvasElement) => {
+    let cropWidth = canvas.width;
+    let cropHeight = cropWidth / aspectRatio;
+
+    if (cropHeight > canvas.height) {
+      cropHeight = canvas.height;
+      cropWidth = cropHeight * aspectRatio;
+    }
+
+    const x = (canvas.width - cropWidth) / 2;
+    const y = (canvas.height - cropHeight) / 2;
+
+    return { x, y, width: cropWidth, height: cropHeight };
+  };
+
+  const handleCrop = () => {
+    if (!imageRef.current || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const img = imageRef.current;
+
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = currentFrame.width;
+    tempCanvas.height = currentFrame.height;
+    const tempCtx = tempCanvas.getContext("2d");
+    if (!tempCtx) return;
+
+    const scaleX = img.width / canvas.width;
+    const scaleY = img.height / canvas.height;
+
+    const sourceX = cropArea.x * scaleX;
+    const sourceY = cropArea.y * scaleY;
+    const sourceWidth = cropArea.width * scaleX;
+    const sourceHeight = cropArea.height * scaleY;
+
+    tempCtx.drawImage(
+      img,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      0,
+      0,
+      currentFrame.width,
+      currentFrame.height
+    );
+
+    tempCanvas.toBlob(
+      (blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        setResultUrl(url);
+      },
+      "image/jpeg",
+      0.95
+    );
   };
 
   useEffect(() => {
     setSelectedFrame(0);
+    setResultUrl(null);
   }, [model]);
 
+  // 시계 업데이트
   useEffect(() => {
-    const cropper = cropperRef.current?.cropper;
-    if (cropper && previewWidth && previewHeight) {
-      cropper.setAspectRatio(previewWidth / previewHeight);
-      console.log(
-        "previewWidth",
-        previewWidth,
-        "previewHeight",
-        previewHeight,
-        previewWidth / previewHeight
-      );
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-      cropper.setCropBoxData({
-        width: previewWidth,
-        height: previewHeight,
-      });
-    }
-  }, [previewWidth, previewHeight]);
+  // 시간 포맷
+  const formatTime = () => {
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes().toString().padStart(2, "0");
+    return { hours, minutes };
+  };
+
+  const formatDate = () => {
+    const days = [
+      "일요일",
+      "월요일",
+      "화요일",
+      "수요일",
+      "목요일",
+      "금요일",
+      "토요일",
+    ];
+    const months = [
+      "1월",
+      "2월",
+      "3월",
+      "4월",
+      "5월",
+      "6월",
+      "7월",
+      "8월",
+      "9월",
+      "10월",
+      "11월",
+      "12월",
+    ];
+    return `${months[currentTime.getMonth()]} ${currentTime.getDate()}일 ${
+      days[currentTime.getDay()]
+    }`;
+  };
+
+  const HomeIcon = ({
+    size = 24,
+    color = "currentColor",
+    className,
+  }: {
+    size?: number;
+    color?: string;
+    className?: string;
+  }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill={color}
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M12 3.293l8 7.2V20a1 1 0 0 1-1 1h-5v-5H10v5H5a1 1 0 0 1-1-1v-9.507l8-7.2z" />
+    </svg>
+  );
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-white font-anonymous-pro overflow-hidden">
-      <div className="w-screen h-screen flex flex-row">
-        {/* 사이드바 */}
-        <aside
-          className="relative flex flex-col items-center overflow-y-auto bg-[#d9d9d9] scrollbar-thin
-          scrollbar-thumb-gray-200 thinner-scrollbar"
-          style={{
-            width: `${(580 / 1920) * 100}vw`,
-            height: "100vh",
-            paddingTop: `${(78 / 1080) * 100}vh`,
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            className="font-normal text-black mb-[5.5vh]"
-            style={{ fontSize: "2.2vw" }}
+    <div className="w-screen h-screen flex bg-white font-sans overflow-hidden">
+      <aside className="w-80 h-screen overflow-y-auto bg-gray-200 flex flex-col items-center pt-8 pb-4">
+        <div className="self-start pl-6">
+          <Link href={"/"}>
+            <HomeIcon />
+          </Link>
+        </div>
+        <div className="text-2xl font-normal text-black mb-8">mobile model</div>
+
+        <div className="flex gap-4 items-center mb-6">
+          <button
+            className={`px-6 py-2 rounded-full transition-all ${
+              model === "iphone"
+                ? "bg-white border-2 border-black font-bold"
+                : "bg-transparent border-2 border-transparent"
+            }`}
+            onClick={() => setModel("iphone")}
           >
-            mobile model
-          </div>
-          <div className="flex gap-[2vw] items-center mb-[2.7vh] justify-center w-full">
+            iPhone
+          </button>
+          <button
+            className={`px-6 py-2 rounded-full transition-all ${
+              model === "galaxy"
+                ? "bg-white border-2 border-black font-bold"
+                : "bg-transparent border-2 border-transparent"
+            }`}
+            onClick={() => setModel("galaxy")}
+          >
+            Galaxy
+          </button>
+        </div>
+
+        <div className="w-2/3 h-px bg-black mb-6" />
+
+        <div className="flex flex-col gap-3 w-full px-6">
+          {frames.map((frame, idx) => (
             <button
-              className={`text-black px-4 py-1 rounded-full transition-all duration-200 ${
-                model === "iphone"
-                  ? "bg-white border border-black font-bold"
-                  : "bg-transparent border border-transparent"
+              key={idx}
+              className={`w-full py-3 px-4 rounded-lg border-2 transition-all text-left ${
+                selectedFrame === idx
+                  ? "bg-blue-500 text-white border-blue-600"
+                  : "bg-white border-gray-300 hover:border-blue-400"
               }`}
-              style={{ fontSize: "1.25vw" }}
-              onClick={() => setModel("iphone")}
+              onClick={() => setSelectedFrame(idx)}
             >
-              iphone
-            </button>
-            <button
-              className={`text-black px-4 py-1 rounded-full transition-all duration-200 ${
-                model === "galaxy"
-                  ? "bg-white border border-black font-bold"
-                  : "bg-transparent border border-transparent"
-              }`}
-              style={{ fontSize: "1.25vw" }}
-              onClick={() => setModel("galaxy")}
-            >
-              galaxy
-            </button>
-          </div>
-          <div
-            className="bg-black mb-[3.7vh]"
-            style={{ width: `${(206 / 580) * 100}%`, height: 1 }}
-          />
-          {/* 모델별 프레임들 */}
-          <div className="flex flex-wrap gap-[1.5vw] justify-center w-full">
-            {frames.map((frame, idx) => (
-              <div
-                key={idx}
-                className={`bg-white border border-black flex flex-col items-center justify-center cursor-pointer ${
-                  selectedFrame === idx ? "ring-2 ring-blue-400" : ""
-                }`}
-                style={{
-                  width: frame.width,
-                  height: frame.height,
-                  fontSize: "0.9vw",
-                }}
-                onClick={() => setSelectedFrame(idx)}
-              >
-                {"name" in frame && (
-                  <span className="text-xs text-gray-500 mb-1">
-                    {(frame as any).name}
-                  </span>
-                )}
+              <div className="font-medium">{frame.name}</div>
+              <div className="text-sm opacity-70">
+                {frame.width} × {frame.height}
               </div>
-            ))}
-          </div>
-        </aside>
-        {/* 미리보기 영역 */}
-        <main className="flex h-screen items-center justify-between gap-80 px-4">
-          <div
-            className="relative flex flex-col items-center"
-            style={{
-              width: frames[selectedFrame].width,
-              height: frames[selectedFrame].height,
-            }}
-          >
-            <ReactCropper
-              src={imageSrc}
-              ref={cropperRef}
-              style={{ width: "100%", height: "100%" }}
-              initialAspectRatio={previewWidth / previewHeight}
-              aspectRatio={previewWidth / previewHeight}
-              viewMode={1}
-              guides={true}
-              cropBoxResizable={true}
-              background={false}
-              responsive={true}
-              autoCropArea={0.8}
-              checkOrientation={false}
-            />
-            <button
-              onClick={handleCropAndUpload}
-              className={`absolute bottom-[-3rem] w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 ${
-                cropButton ? "block" : "hidden"
-              }`}
-            >
-              크롭 후 배경화면 만들기
             </button>
-          </div>
-          {/* 왼쪽: 미리보기 영역 */}
-          <div
-            className="relative w-auto max-w-[300px] aspect-[374/800] flex items-center justify-center"
-            style={{ height: "87vh" }}
-          >
+          ))}
+        </div>
+      </aside>
+
+      <main className="flex-1 h-screen flex items-center justify-center gap-12 px-8">
+        <div
+          className="flex flex-col items-center justify-center"
+          style={{ width: `${previewWidth}px` }}
+        >
+          {imageSrc ? (
+            <>
+              <div className="relative">
+                <canvas
+                  ref={canvasRef}
+                  className="border-2 border-gray-300 rounded-lg"
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                />
+                <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                  Drag: Move
+                  <br /> Corner: Resize
+                </div>
+              </div>
+              <div className="flex gap-1 w-full">
+                <button
+                  onClick={handleReset}
+                  className="mt-4 w-full bg-white border-2 py-2 border-black font-bold rounded-3xl hover:bg-black hover:text-white transition-all"
+                >
+                  Reset
+                </button>
+                <button
+                  onClick={handleCrop}
+                  className="mt-4 w-full bg-white border-2 py-2 border-black font-bold rounded-3xl hover:bg-black hover:text-white transition-all"
+                >
+                  Crop
+                </button>
+              </div>
+            </>
+          ) : (
             <div
-              className="rounded-[45px] border border-black bg-cover bg-center absolute inset-0 z-0 transition-all duration-300"
+              className="border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center"
               style={{
                 width: `${previewWidth}px`,
                 height: `${previewHeight}px`,
-                backgroundImage: resultUrl
-                  ? `url(${resultUrl})`
-                  : imageSrc
-                  ? `url(${imageSrc})`
-                  : "none",
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-              }}
-            />
-            <button
-              type="button"
-              className="z-10 flex flex-col items-center justify-center text-[#aaa] text-center hover:text-blue-500 focus:outline-none"
-              style={{
-                fontSize: "2.5vw",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                fileInputRef.current?.click();
-                setCropButton(true);
               }}
             >
-              <svg width="2em" height="2em" viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="11"
-                  stroke="#000"
-                  strokeWidth="0.2"
-                />
-                <path
-                  d="M12 7v10M7 12h10"
-                  stroke="#000"
-                  strokeWidth="0.3"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span style={{ fontSize: "0.9vw", marginTop: 4 }}>사진 첨부</span>
+              <button
+                type="button"
+                className="flex flex-col items-center justify-center text-gray-400 hover:text-blue-500 transition-all"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="11"
+                    stroke="currentColor"
+                    strokeWidth="0.5"
+                  />
+                  <path
+                    d="M12 7v10M7 12h10"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <span className="mt-4 text-lg">add photo</span>
+              </button>
               <input
                 type="file"
                 ref={fileInputRef}
@@ -346,58 +612,95 @@ export default function Wishlist() {
                 accept="image/*"
                 onChange={handleFileChange}
               />
-            </button>
-          </div>
-          {/* 오른쪽: 크롭 영역 */}
+            </div>
+          )}
+        </div>
 
-          {/* 다운로드 링크 */}
+        <div
+          className="flex flex-col items-center justify-center"
+          style={{ width: `${previewWidth}px` }}
+        >
+          <div
+            className="rounded-[40px] border-4 border-black bg-gray-100 transition-all duration-300 shadow-2xl overflow-hidden relative"
+            style={{ width: `${previewWidth}px`, height: `${previewHeight}px` }}
+          >
+            {resultUrl ? (
+              <>
+                <img
+                  src={resultUrl}
+                  alt="크롭된 배경화면"
+                  className="w-full h-full object-cover"
+                />
+                {/* 잠금화면 오버레이 */}
+                <div className="absolute inset-0 flex flex-col items-center justify-start pt-16 text-white">
+                  {model === "iphone" ? (
+                    <div className="flex flex-col items-center">
+                      <div
+                        className="text-7xl font-light tracking-tight"
+                        style={{ fontFamily: "system-ui, -apple-system" }}
+                      >
+                        {formatTime().hours}:{formatTime().minutes}
+                      </div>
+                      <div className="text-lg font-medium mt-2 tracking-wide">
+                        {formatDate()}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <div
+                        className="text-6xl font-normal tracking-normal"
+                        style={{ fontFamily: "system-ui" }}
+                      >
+                        {formatTime().hours}:{formatTime().minutes}
+                      </div>
+                      <div className="text-base font-normal mt-1 opacity-90">
+                        {formatDate()}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="absolute bottom-8 flex flex-col items-center">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="mb-2"
+                    >
+                      <path
+                        d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z"
+                        fill="white"
+                      />
+                    </svg>
+                    <div className="text-xs opacity-75">
+                      위로 밀어서 잠금 해제
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400 text-center p-8">
+                <div>
+                  <div className="text-lg font-medium mb-2">
+                    {currentFrame.name}
+                  </div>
+                  <div className="text-sm">Preview</div>
+                </div>
+              </div>
+            )}
+          </div>
+
           {resultUrl && (
             <a
               href={resultUrl}
-              download="wallpaper.jpg"
-              className="absolute bottom-6 text-blue-600 hover:underline"
+              download={`${currentFrame.name}_wallpaper.jpg`}
+              className="mt-4 w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-all text-center font-medium"
             >
-              👉 배경화면 다운로드
+              Download
             </a>
           )}
-        </main>
-
-        {/* <main className="flex-1 h-screen flex items-center justify-center relative">
-          <div
-            className="relative w-auto max-w-[300px] aspect-[374/800] ml-4 flex items-center justify-center"
-            style={{ height: "87vh" }}
-          >
-            <div
-              className="rounded-[45px] border border-black bg-cover bg-center absolute inset-0 z-0 transition-all duration-300"
-              style={{
-                width: `${previewWidth}px`,
-                height: `${previewHeight}px`,
-                margin: "auto",
-              }}
-            />
-            <button
-              type="button"
-              className="z-10 flex flex-col items-center justify-center text-[#aaa] text-center hover:text-blue-500 focus:outline-none"
-              style={{ fontSize: "2.5vw", background: "none", border: "none", cursor: "pointer" }}
-              onClick={() => {
-                if (fileInputRef.current) fileInputRef.current.click();
-              }}
-            >
-              <svg width="2em" height="2em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="11" stroke="#000" strokeWidth="0.2" fill="none"/>
-                <path d="M12 7v10M7 12h10" stroke="#000" strokeWidth="0.3" strokeLinecap="round"/>
-              </svg>
-              <span style={{ fontSize: "0.9vw", marginTop: 4 }}>사진 첨부</span>
-              <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-              />
-            </button>
-          </div>
-        </main> */}
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
