@@ -1,4 +1,4 @@
-import PhotoFrame from "../../../ui/photo-frame";
+import PhotoFrame from "../../../ui/main-photo-frame";
 
 export default function ModalDefault() {
   return (

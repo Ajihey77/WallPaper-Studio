@@ -1,4 +1,6 @@
-export const iphoneFrames = [
+import type { DeviceFrame } from "../types";
+
+export const iphoneFrames: DeviceFrame[] = [
   { name: "iPhone 15 Pro Max", width: 430, height: 932 },
   { name: "iPhone 15 Pro", width: 393, height: 852 },
   { name: "iPhone 15", width: 390, height: 844 },
@@ -13,7 +15,7 @@ export const iphoneFrames = [
   { name: "iPhone 12", width: 390, height: 844 },
 ];
 
-export const galaxyFrames = [
+export const galaxyFrames: DeviceFrame[] = [
   { name: "S24 Ultra", width: 412, height: 915 },
   { name: "S24+", width: 384, height: 854 },
   { name: "S24", width: 360, height: 800 },

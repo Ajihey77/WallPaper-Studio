@@ -1,4 +1,4 @@
-import ImagePreview from "../../../../ui/detail-image-preiew"; // 경로는 실제에 맞게 수정
+import ImagePreview from "../../../../ui/main-detail-image-preiew"; // 경로는 실제에 맞게 수정
 
 export default async function PreviewPage({
   params,

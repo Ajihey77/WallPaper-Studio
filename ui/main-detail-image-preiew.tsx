@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import PhotoFrame from "./photo-frame";
+import PhotoFrame from "./main-photo-frame";
 
 export default function ImagePreview({ id }: { id: string }) {
   const [image, setImage] = useState<{ secure_url: string } | null>(null);
