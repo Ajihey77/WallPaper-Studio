@@ -1,15 +1,21 @@
+import { Suspense } from "react";
 import MainScrollView from "../../ui/main-scroll-view";
+import SkeletonGrid from "../../ui/skeletongrid";
+import { getAllImg } from "../../lib/cloudinary";
 
-async function getImages() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/photos`);
 
-  if (!res.ok) throw new Error("이미지 로딩 실패");
-  const data = await res.json();
-  return data.resources;
+
+async function ImagesSection() {
+  const images = await getAllImg(); // API 라우트 우회, 직접 호출
+  return <MainScrollView images={images} />;
 }
 
-export default async function Main() {
-  const images = await getImages();
-  console.log(images);
-  return <MainScrollView images={images} />;
+export default function Main() {
+  return (
+    <Suspense fallback={
+      <SkeletonGrid/>
+    }>
+      <ImagesSection />
+    </Suspense>
+  );
 }

@@ -14,3 +14,12 @@ body {
   background: #ccc;
   border-radius: 4px;
 }
+
+/* 스크롤바 숨기기 */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

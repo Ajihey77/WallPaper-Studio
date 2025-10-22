@@ -3,9 +3,10 @@ import { getImg } from "../../../../lib/cloudinary";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params:Promise <{ id: string }> }
 ) {
-  const result = await getImg(params.id);
+  const {id} = await params
+  const result = await getImg(id);
 
   return NextResponse.json(result);
 }

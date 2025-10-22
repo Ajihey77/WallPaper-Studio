@@ -15,10 +15,21 @@ export async function getAllImg() {
   return result.resources;
 }
 
+// lib/cloudinary.ts
 export async function getImg(id: string) {
-  const result = await cloudinary.search
-    .expression(`public_id=${id}`)
-    .max_results(1)
-    .execute();
-  return result.resources[0];
+  try {
+    console.log("🔍 Searching for public_id:", id);
+    const result = await cloudinary.search
+      .expression(`public_id="${id}"`)  // 따옴표 추가
+      .max_results(1)
+      .execute();
+    
+    console.log("🔍 Search result:", result);
+    console.log("🔍 Resources found:", result.resources?.length || 0);
+    
+    return result.resources?.[0] || null;
+  } catch (error) {
+    console.error("❌ Cloudinary search error:", error);
+    return null;
+  }
 }

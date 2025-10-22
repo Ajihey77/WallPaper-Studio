@@ -9,14 +9,23 @@ export default function PhotoFrame({
 }) {
   return (
     <>
-      <div className="relative h-[87vh] w-auto max-w-[300px] aspect-[374/800] ml-4 flex items-center justify-center">
-        <div className="w-full h-full rounded-[45px] border border-black bg-cover bg-center absolute inset-0 z-0" />
-        <Image
-          src={arrow}
-          alt="화살표"
-          className="absolute -left-12 -top-2 w-[155px] h-[53px] z-10"
-        />
+      <div className="relative h-[87vh] w-auto max-w-[300px] aspect-[374/800]  flex items-center justify-center">
+      <Image
+        src={arrow}
+        alt="화살표"
+        className="absolute -left-20 -top-2 w-[155px] h-[53px] z-10"
+        width={155}
+        height={53}
+        style={{ height: 'auto' }} 
+        priority={true}
+      />
+      <div
+          className="rounded-[40px] border-4 border-black bg-gray-100 transition-all duration-300 shadow-2xl overflow-hidden 
+          flex items-center justify-center"
+          style={{ width: "300px", height: "87vh" }}
+        >
         {children}
+        </div>
       </div>
     </>
   );

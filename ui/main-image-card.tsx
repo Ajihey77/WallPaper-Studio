@@ -20,6 +20,7 @@ export default function MainImageCard({
         src={src}
         alt="이미지"
         fill
+        sizes="300px" 
         style={{ objectFit: "cover" }}
         priority={priority}
       />
