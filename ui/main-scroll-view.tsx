@@ -47,9 +47,9 @@ export default function MainScrollView({ images }: { images: any }) {
         </div>
         <div
           ref={containerRef}
-          className="h-full bg-white flex flex-col justify-center overflow-y-scroll [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="h-full bg-white flex flex-col justify-center overflow-x-scroll overflow-y-scroll [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          <div className="grid grid-cols-5 w-full gap-4">
+          <div className="grid grid-cols-5 w-max gap-4">
             {images.map(
               (
                 img: { public_id: string; secure_url: string },

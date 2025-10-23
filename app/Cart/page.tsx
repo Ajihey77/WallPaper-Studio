@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { galaxyFrames, iphoneFrames } from "../../data/deviceFrames";
 import ModelAside from "../../ui/product-aside";
@@ -29,9 +29,6 @@ export default function Cart() {
 
   // 현재 선택된 이미지 인덱스
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  // 현재 선택된 이미지
-  const currentItem = cartImg[currentImageIndex];
 
   useEffect(() => {
     setSelectedFrame(0);
