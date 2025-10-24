@@ -7,7 +7,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-const imageCache = new Map<string, any>();
+interface ImgResource {
+  public_id: string;
+  [key: string]: unknown; // 나머지 속성은 모르겠으면 unknown
+}
+
+const imageCache = new Map<string, ImgResource>();
 
 export const getAllImg = unstable_cache(
   async () => {
@@ -16,8 +21,10 @@ export const getAllImg = unstable_cache(
       .sort_by("created_at", "desc")
       .max_results(30)
       .execute();
+      
 
-    result.resources.forEach((img: any) => {
+      
+    result.resources.forEach((img: ImgResource) => {
       imageCache.set(img.public_id, img);
     });
     return result.resources;
