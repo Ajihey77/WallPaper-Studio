@@ -1,45 +1,85 @@
 "use client";
-import { FallbackProps } from "react-error-boundary";
 
-export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+import React, { useState } from "react";
+import MainImageCard from "./main-image-card";
+import { UseScrollDirection } from "../hooks/use-scroll-direction";
+import Link from "next/link";
+import { useCartStore } from "../store/cartStore";
+
+export default function MainScrollView({ images }: { images: any }) {
+  const { containerRef } = UseScrollDirection();
+  const { addImg } = useCartStore();
+
+  const addCart = (url: string) => {
+    addImg(url);
+    console.log(url);
+  };
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full p-4">
-      <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
-        <svg
-          className="w-6 h-6 text-red-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+    <div className="w-screen h-screen flex overflow-hidden translate-x-[-70px]">
+      <div className="flex flex-row items-center justify-center gap-4 w-full h-full max-w-[1920px] max-h-[87vh] translate-x-[-70px]">
+        <div className="flex flex-col items-center justify-center gap-[4vh] h-full min-w-[53px]">
+          <Link href={"/Wishlist"}>
+            <div className="w-14 h-14 flex items-center justify-center bg-gray-200 rounded-full hover:bg-white hover:border-2 hover:border-black transition-all group">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="black"
+              >
+                <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8.5 11a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm10.5 6H5l3.5-4.5 2.5 3 3.5-4.5L19 17Z" />{" "}
+              </svg>
+            </div>
+          </Link>
+          <Link href={"/Cart"}>
+            <div className="w-14 h-14 flex items-center justify-center bg-gray-200 rounded-full hover:bg-white hover:border-2 hover:border-black transition-all group">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="black"
+              >
+                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2Zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2ZM7.16 14h9.73c.83 0 1.54-.5 1.84-1.22l3.24-7.59A.996.996 0 0 0 21 4H5.21L4.27 1.64A1.003 1.003 0 0 0 3.3 1H1v2h1.6l3.6 7.59-1.35 2.45C4.52 13.37 5.16 14 6 14h1.16ZM6.1 6h13.45l-2.76 6H8.53L6.1 6Z" />
+              </svg>
+            </div>
+          </Link>
+        </div>
+        <div
+          ref={containerRef}
+          className="h-full bg-white flex flex-col justify-center overflow-x-scroll overflow-y-scroll [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-          />
-        </svg>
-      </div>
-
-      <h2 className="text-lg font-bold text-gray-800 mb-1.5">
-        문제가 발생했습니다
-      </h2>
-      <p className="text-sm text-gray-600 mb-4 text-center max-w-sm px-4">
-        {error.message || "알 수 없는 오류가 발생했습니다"}
-      </p>
-
-      <div className="flex gap-2">
-        <button
-          onClick={resetErrorBoundary}
-          className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all"
-        >
-          다시 시도
-        </button>
-        <button
-          onClick={() => (window.location.href = "/")}
-          className="px-4 py-2 text-sm bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-all"
-        >
-          홈으로
-        </button>
+          <div className="grid grid-cols-5 w-max gap-4">
+            {images.map(
+              (
+                img: { public_id: string; secure_url: string },
+                index: number
+              ) => (
+                <div
+                  key={img.public_id}
+                  className="relative flex items-center justify-center"
+                >
+                  <Link href={`/?preview=${img.public_id}`}>
+                    <MainImageCard src={img.secure_url} priority={index < 2} />
+                  </Link>
+                  <div
+                    onClick={() => addCart(img.secure_url)}
+                    className="absolute bottom-2 right-2 bg-white/50 rounded-full p-2 shadow-md hover:bg-white transition"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="black"
+                      viewBox="0 0 24 24"
+                      className="w-3 h-3 text-gray-700"
+                    >
+                      <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2Zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2ZM7.16 14h9.73c.83 0 1.54-.5 1.84-1.22l3.24-7.59A.996.996 0 0 0 21 4H5.21L4.27 1.64A1.003 1.003 0 0 0 3.3 1H1v2h1.6l3.6 7.59-1.35 2.45C4.52 13.37 5.16 14 6 14h1.16ZM6.1 6h13.45l-2.76 6H8.53L6.1 6Z" />
+                    </svg>
+                  </div>
+                </div>
+              )
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

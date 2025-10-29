@@ -10,5 +10,5 @@ async function ImagesSection() {
 }
 
 export default function Main() {
-  return <ErrorTest />;
+  return <ImagesSection />;
 }
